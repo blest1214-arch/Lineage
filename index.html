@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#17130f"><title>王國紀元：遠征</title>
+<style>
+:root{--bg:#17130f;--panel:#282018;--panel2:#34291e;--gold:#d9b56c;--text:#f2e6cf;--muted:#b8a58a;--red:#b84b43;--green:#6ca66c}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#493522 0,#17130f 58%);color:var(--text);font:15px system-ui,-apple-system,"Noto Sans TC",sans-serif;padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:5;background:#17130fee;border-bottom:1px solid #765a32;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
+h1{font-size:18px;margin:0;color:var(--gold);letter-spacing:2px}.sub{font-size:11px;color:var(--muted)}
+main{max-width:850px;margin:auto;padding:12px}.panel{background:linear-gradient(145deg,#382b20,#211a14);border:1px solid #755932;border-radius:12px;padding:12px;margin-bottom:12px;box-shadow:0 5px 18px #0005}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{background:#1d1712;border:1px solid #57432a;border-radius:8px;padding:8px;min-width:0}.stat b{color:var(--gold)}.muted{color:var(--muted);font-size:12px}.big{font-size:20px;color:var(--gold);font-weight:800}.bar{height:9px;background:#100d0a;border-radius:8px;overflow:hidden;margin:5px 0}.bar i{display:block;height:100%;background:linear-gradient(90deg,#9c332d,#e16a52);width:50%}.bar.mp i{background:linear-gradient(90deg,#285a9a,#68a9e8)}.bar.xp i{background:linear-gradient(90deg,#8d6a27,#e6c16d)}
+button,select,input{font:inherit;color:var(--text);background:#4a3826;border:1px solid #9b7845;border-radius:8px;padding:9px 11px}button{cursor:pointer}button:active{transform:scale(.98)}button.primary{background:linear-gradient(#a77a37,#76501f);font-weight:700}button.active{outline:2px solid var(--gold)}button:disabled{opacity:.4}select{max-width:100%}.tabs{position:fixed;bottom:0;left:0;right:0;z-index:9;display:grid;grid-template-columns:repeat(5,1fr);background:#17130ff5;border-top:1px solid #765a32;padding:7px 4px calc(7px + env(safe-area-inset-bottom));backdrop-filter:blur(10px)}.tabs button{background:transparent;border:0;padding:7px 2px;font-size:12px;color:var(--muted)}.tabs button.active{color:var(--gold);background:#46341f}.tab{display:none}.tab.show{display:block}.monster{font-size:54px;text-align:center;padding:10px}.log{height:130px;overflow:auto;background:#120f0c;border:1px solid #4b3925;border-radius:8px;padding:8px;font-size:12px;line-height:1.7}.item{display:flex;justify-content:space-between;gap:8px;align-items:center;border-bottom:1px solid #59432c;padding:9px 0}.pill{border:1px solid #80623a;border-radius:99px;padding:2px 7px;color:var(--gold);font-size:11px}.good{color:#8ed18c}.bad{color:#e58b7d}.title{color:var(--gold);font-weight:800;margin-bottom:8px}.hidden{display:none!important}
+@media(min-width:650px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.monster{font-size:72px}}
+</style>
+</head>
+<body>
+<header><div><h1>王國紀元：遠征</h1><div class="sub">CLASSIC IDLE MMORPG · MOBILE EDITION</div></div><div class="sub" id="saveState">本機存檔</div></header>
+<main>
+<section id="home" class="tab show">
+ <div class="panel">
+  <div class="row between"><div><div class="big" id="heroName">無名冒險者</div><div class="muted" id="heroMeta">尚未建立角色</div></div><button class="primary" id="createBtn">建立角色</button></div>
+  <div class="row" style="margin-top:10px"><span id="hpText">HP 0/0</span><span class="muted" id="mpText">MP 0/0</span></div><div class="bar"><i id="hpBar"></i></div><div class="bar mp"><i id="mpBar"></i></div>
+  <div class="bar xp"><i id="xpBar"></i></div><div class="muted" id="xpText">EXP 0%</div>
+  <div class="grid" style="margin-top:10px"><div class="stat">⚔️ 攻擊 <b id="atk">0</b></div><div class="stat">🛡️ 防禦 <b id="def">0</b></div><div class="stat">💰 金幣 <b id="gold">0</b></div><div class="stat">⭐ 戰力 <b id="power">0</b></div></div>
+ </div>
+ <div class="panel">
+  <div class="row between"><div class="title">自動狩獵</div><span class="pill" id="huntState">待命</span></div>
+  <div class="monster" id="monsterIcon">🐺</div><div style="text-align:center"><b id="monsterName">森林野狼</b><div class="muted" id="monsterInfo">Lv.1 · HP 40</div><div class="bar"><i id="monsterBar"></i></div></div>
+  <div class="row" style="justify-content:center;margin-top:10px"><button class="primary" id="huntBtn">▶ 開始掛機</button><button id="potionBtn">🧪 自動喝水：開</button></div>
+  <div class="muted" style="text-align:center;margin-top:8px" id="huntHint">開啟自動戰鬥，角色會持續狩獵並取得經驗與戰利品。</div>
+ </div>
+ <div class="panel"><div class="title">戰鬥紀錄</div><div class="log" id="log">歡迎來到王國紀元。選擇職業，開始你的冒險！</div></div>
+</section>
+<section id="character" class="tab">
+ <div class="panel"><div class="title">角色資訊</div><div class="grid" id="statsGrid"></div><div class="title" style="margin-top:14px">能力分配</div><div class="muted">升級取得能力點數，可自由強化屬性。</div><div class="row" id="points"></div></div>
+ <div class="panel"><div class="title">裝備欄</div><div id="equipment"></div></div>
+</section>
+<section id="skills" class="tab"><div class="panel"><div class="title">職業技能</div><div class="muted">技能會在自動戰鬥時依照魔力與冷卻自動施放。</div><div id="skillList"></div></div></section>
+<section id="world" class="tab"><div class="panel"><div class="title">狩獵地圖</div><div class="muted">角色等級達到需求即可前往新區域。</div><div id="mapList"></div></div><div class="panel"><div class="title">Boss 挑戰</div><div id="bossList"></div></div></section>
+<section id="bag" class="tab"><div class="panel"><div class="title">背包與強化</div><div id="inventory"></div></div><div class="panel"><div class="title">商店</div><div id="shop"></div></div><div class="panel"><div class="title">雲端存檔設定</div><div class="muted">使用 Supabase 可跨裝置同步。填入專案 URL 與 anon key，並先執行下載包內的 schema.sql。</div><input id="sbUrl" placeholder="Supabase Project URL" style="width:100%;margin:7px 0"><input id="sbKey" placeholder="Supabase anon / publishable key" style="width:100%;margin:7px 0"><div class="row"><button class="primary" id="cloudConnect">連接雲端</button><button id="cloudSave">立即同步</button></div><div class="muted" id="cloudMsg">目前使用本機自動存檔。</div></div></section>
+</main>
+<nav class="tabs"><button class="active" data-tab="home">⚔️<br>狩獵</button><button data-tab="character">👤<br>角色</button><button data-tab="skills">✨<br>技能</button><button data-tab="world">🗺️<br>世界</button><button data-tab="bag">🎒<br>背包</button></nav>
+<script>
+const $=id=>document.getElementById(id);
+const classes={
+ Knight:{name:"騎士",icon:"🛡️",hp:150,mp:35,atk:12,def:8,str:8,dex:4,int:2,skills:[["猛烈斬擊","單體傷害 + 160%",1,0],["鋼鐵意志","防禦提升 30%",3,12],["旋風斬","範圍傷害 + 220%",8,18]]},
+ Elf:{name:"妖精",icon:"🏹",hp:105,mp:75,atk:15,def:4,str:4,dex:9,int:5,skills:[["精準射擊","單體傷害 + 180%",1,0],["自然祝福","恢復生命 25%",3,15],["三重箭","連續攻擊三次",8,22]]},
+ Mage:{name:"法師",icon:"🔮",hp:85,mp:120,atk:18,def:3,str:2,dex:4,int:10,skills:[["魔力彈","魔法傷害 + 190%",1,0],["治癒術","恢復生命 35%",3,18],["暴風雪","強力魔法傷害",8,30]]}
+};
+const maps=[
+{name:"說話之島",level:1,monsters:[["森林野狼","🐺",40,5,8],["哥布林","👺",55,7,10],["骷髏兵","💀",75,9,14]]},
+{name:"古魯丁荒野",level:10,monsters:[["食人妖精","👹",180,18,35],["狼人","🐺",220,22,42],["骷髏弓箭手","🏹",260,25,48]]},
+{name:"奇岩地監",level:25,monsters:[["石像鬼","🗿",650,55,100],["黑暗精靈","🧝",800,70,130],["地獄犬","🐕‍🦺",950,85,160]]},
+{name:"龍之谷",level:45,monsters:[["飛龍","🐉",2100,160,380],["巨型骷髏","☠️",2500,190,450],["地龍守衛","🦖",3000,230,520]]},
+{name:"遺忘之島",level:70,monsters:[["深淵魔獸","👾",6500,420,900],["遠古巨人","🧌",8000,500,1100],["暗黑龍","🐲",11000,650,1500]]}
+];
+const gearDefs=[
+["木劍","weapon",1,3,0,0],["騎士長劍","weapon",8,9,0,0],["精靈長弓","weapon",12,12,0,0],["法師魔杖","weapon",12,11,0,0],["鋼鐵盔甲","armor",5,0,5,0],["精靈皮甲","armor",10,0,4,0],["魔法長袍","armor",10,0,2,5],["力量戒指","accessory",15,2,0,0],["守護項鍊","accessory",20,0,3,0]
+];
+const bosses=[{name:"巨蟻女皇",icon:"🐜",level:8,hp:1600,atk:45,xp:600,gold:500,drop:"力量戒指"},{name:"巴風特幻影",icon:"👿",level:25,hp:8500,atk:150,xp:3500,gold:2500,drop:"騎士長劍"},{name:"冰之女王",icon:"🧊",level:40,hp:22000,atk:260,xp:9000,gold:7000,drop:"魔法長袍"},{name:"炎魔",icon:"🔥",level:60,hp:65000,atk:480,xp:25000,gold:18000,drop:"力量戒指"},{name:"遠古巨龍",icon:"🐉",level:80,hp:180000,atk:850,xp:90000,gold:65000,drop:"精靈長弓"}];
+let s=load()||null, timer=null, cloud=null, monster=null, auto=true;
+function fresh(){return {name:"冒險者",job:"Knight",level:1,xp:0,gold:300,hp:150,mp:35,points:0,str:8,dex:4,int:2,weapon:null,armor:null,accessory:null,inventory:["木劍"],kills:0,map:0,hunting:false,potion:true,skillOn:true,created:Date.now(),last:Date.now(),bossDone:[],enhance:{},skills:{},potions:5}}
+function load(){try{return JSON.parse(localStorage.getItem("kingdom_idle_save"))}catch(e){return null}}
+function save(){if(!s)return;s.last=Date.now();localStorage.setItem("kingdom_idle_save",JSON.stringify(s));$("saveState").textContent=cloud?"雲端同步":"本機已儲存"}
+function log(t){let el=$("log");el.innerHTML+=`<div>› ${new Date().toLocaleTimeString()} ${t}</div>`;el.scrollTop=el.scrollHeight}
+function stats(){let c=classes[s.job], lv=s.level-1, eq=[s.weapon,s.armor,s.accessory].filter(Boolean).map(n=>gearDefs.find(g=>g[0]===n)).filter(Boolean);return {hp:c.hp+lv*18+s.str*3+eq.reduce((a,g)=>a+g[4],0),mp:c.mp+lv*8+s.int*5+eq.reduce((a,g)=>a+g[5],0),atk:c.atk+lv*2+s.str*1.2+s.dex*.45+s.int*.35+eq.reduce((a,g)=>a+g[3],0)+Object.values(s.enhance).reduce((a,v)=>a+v*2,0),def:c.def+Math.floor(lv*.7)+Math.floor(s.dex/3)+eq.reduce((a,g)=>a+g[4],0)}}
+function makeMonster(){let m=maps[s.map].monsters[Math.floor(Math.random()*maps[s.map].monsters.length)];return {name:m[0],icon:m[1],max:m[2],hp:m[2],atk:m[3],xp:m[4]}}
+function setMonster(){monster=makeMonster();$("monsterIcon").textContent=monster.icon;$("monsterName").textContent=monster.name;updateMonster()}
+function updateMonster(){$("monsterInfo").textContent=`${maps[s.map].name} · HP ${Math.max(0,Math.ceil(monster.hp))}/${monster.max}`;$("monsterBar").style.width=Math.max(0,monster.hp/monster.max*100)+"%"}
+function xpNeed(){return Math.floor(80*Math.pow(s.level,1.65))}
+function gainXP(n){s.xp+=n;while(s.xp>=xpNeed()&&s.level<100){s.xp-=xpNeed();s.level++;s.points+=3;let a=stats();s.hp=a.hp;s.mp=a.mp;log(`🎉 升級！現在 Lv.${s.level}，獲得 3 點能力點數。`)}}
+function attack(){if(!s||!s.hunting)return;let a=stats();if(!monster||monster.hp<=0)setMonster();let damage=Math.max(1,Math.floor(a.atk*(.85+Math.random()*.35)));let used="";
+let c=classes[s.job], skill=c.skills.find(x=>s.level>=x[2]&&!s.skills[x[0]]?.cd);if(s.skillOn&&skill&&s.mp>=skill[3]&&Math.random()<.28){s.mp-=skill[3];damage=Math.floor(damage*1.7);used=`✨${skill[0]} `;s.skills[skill[0]]={cd:Date.now()+5000}}
+monster.hp-=damage;log(`${used}對${monster.name}造成 ${damage} 傷害。`);
+if(monster.hp<=0){let g=maps[s.map].monsters.find(x=>x[0]===monster.name);s.kills++;s.gold+=Math.floor(g[4]*1.4+Math.random()*10);gainXP(g[4]);if(Math.random()<.10){let d=gearDefs[Math.floor(Math.random()*gearDefs.length)][0];s.inventory.push(d);log(`🎁 掉落裝備：${d}`)}if(Math.random()<.22){s.potions++;}setMonster()}
+else if(Math.random()<.23){let hurt=Math.max(1,Math.floor(monster.atk-a.def*.35));s.hp-=hurt;if(s.potion&&s.hp<a.hp*.45&&s.potions>0){s.potions--;s.hp=Math.min(a.hp,s.hp+Math.floor(a.hp*.45));log("🧪 自動使用生命藥水。")}if(s.hp<=0){s.hp=1;s.hunting=false;log("角色重傷，狩獵暫停。請補充藥水或更換地圖。")}}
+update();save()}
+function offlineReward(){if(!s)return;let elapsed=Math.min(24*3600*1000,Math.max(0,Date.now()-(s.last||Date.now())));if(elapsed<60000)return;let mins=Math.floor(elapsed/60000),rate= s.hunting?1:0.5, count=Math.floor(mins/4*rate);if(count>0){let a=stats(), m=maps[s.map].monsters[0], xp=count*m[4], gold=count*Math.floor(m[4]*1.4);gainXP(xp);s.gold+=gold;s.kills+=count;let msg=`離線 ${Math.floor(mins/60)} 小時 ${mins%60} 分，獲得 ${xp} EXP、${gold} 金幣。`;log("🌙 "+msg);alert("離線收益\n"+msg)}}
+function update(){if(!s)return;let a=stats(),c=classes[s.job];s.hp=Math.min(s.hp,a.hp);s.mp=Math.min(s.mp,a.mp);$("heroName").textContent=s.name;$("heroMeta").textContent=`${c.icon} ${c.name} · Lv.${s.level} · 擊殺 ${s.kills}`;$("hpText").textContent=`HP ${Math.ceil(s.hp)}/${a.hp}`;$("mpText").textContent=`MP ${Math.ceil(s.mp)}/${a.mp}`;$("hpBar").style.width=s.hp/a.hp*100+"%";$("mpBar").style.width=s.mp/a.mp*100+"%";$("xpBar").style.width=s.xp/xpNeed()*100+"%";$("xpText").textContent=`EXP ${Math.floor(s.xp/xpNeed()*100)}% · ${s.xp}/${xpNeed()}`;$("atk").textContent=Math.floor(a.atk);$("def").textContent=a.def;$("gold").textContent=s.gold.toLocaleString();$("power").textContent=Math.floor(a.atk*5+a.hp*.4+a.def*8);$("huntState").textContent=s.hunting?"自動狩獵中":"待命";$("huntBtn").textContent=s.hunting?"⏸ 暫停掛機":"▶ 開始掛機";$("potionBtn").textContent=`🧪 自動喝水：${s.potion?"開":"關"}`;renderAll()}
+function renderAll(){if(!s)return;let a=stats();$("statsGrid").innerHTML=[["力量",s.str],["敏捷",s.dex],["智力",s.int],["剩餘點數",s.points],["攻擊",Math.floor(a.atk)],["防禦",a.def],["最大HP",a.hp],["最大MP",a.mp]].map(x=>`<div class="stat">${x[0]} <b>${x[1]}</b></div>`).join("");$("points").innerHTML=["str","dex","int"].map(k=>`<button onclick="addPoint('${k}')" ${s.points<1?"disabled":""}>${{str:"力量",dex:"敏捷",int:"智力"}[k]} +1</button>`).join("");$("equipment").innerHTML=["weapon","armor","accessory"].map(k=>`<div class="item"><span>${{weapon:"⚔️ 武器",armor:"🛡️ 防具",accessory:"💍 飾品"}[k]}</span><b>${s[k]||"未裝備"}</b></div>`).join("");$("skillList").innerHTML=classes[s.job].skills.map(x=>`<div class="item"><div><b>${x[0]}</b><div class="muted">${x[1]} · Lv.${x[2]} · MP ${x[3]}</div></div><span class="pill">${s.level>=x[2]?"已解鎖":"未解鎖"}</span></div>`).join("");$("mapList").innerHTML=maps.map((m,i)=>`<div class="item"><div><b>${m.name}</b><div class="muted">建議等級 Lv.${m.level}</div></div><button onclick="changeMap(${i})" ${s.level<m.level?"disabled":""}>${s.map===i?"目前地圖":"前往"}</button></div>`).join("");$("bossList").innerHTML=bosses.map((b,i)=>`<div class="item"><div><b>${b.icon} ${b.name}</b><div class="muted">Lv.${b.level} · HP ${b.hp.toLocaleString()} · 首領獎勵 ${b.drop}</div></div><button onclick="fightBoss(${i})" ${s.level<b.level||s.bossDone.includes(i)?"disabled":""}>${s.bossDone.includes(i)?"已擊敗":"挑戰"}</button></div>`).join("");$("inventory").innerHTML=`<div class="item"><span>🧪 生命藥水 × ${s.potions}</span><button onclick="buyPotion()">購買 50 金幣</button></div>`+s.inventory.map((n,i)=>{let g=gearDefs.find(x=>x[0]===n),lv=s.enhance[n]||0;return `<div class="item"><div><b>${n} <span class="pill">+${lv}</span></b><div class="muted">${g?`攻擊 +${g[3]} · 防禦 +${g[4]}`:"裝備"}</div></div><div class="row"><button onclick="equip(${i})">穿戴</button><button onclick="enhance(${i})">強化</button></div></div>`}).join("");$("shop").innerHTML=gearDefs.map(g=>`<div class="item"><span>${g[0]} <span class="muted">攻${g[3]} 防${g[4]}</span></span><button onclick="buyGear('${g[0]}')">購買 ${g[2]*100}G</button></div>`).join("")}
+function addPoint(k){if(s.points<=0)return;s[k]++;s.points--;update();save()}
+function changeMap(i){if(s.level<maps[i].level)return;s.map=i;setMonster();log(`前往${maps[i].name}。`);update();save()}
+function equip(i){let n=s.inventory[i],g=gearDefs.find(x=>x[0]===n);if(!g)return;let slot=g[1];if(s[slot])s.inventory.push(s[slot]);s[slot]=n;s.inventory.splice(i,1);log(`已裝備 ${n}。`);update();save()}
+function enhance(i){let n=s.inventory[i],lv=s.enhance[n]||0;if(lv>=10){alert("已達最高強化 +10");return}let cost=(lv+1)*150;if(s.gold<cost){alert("金幣不足");return}s.gold-=cost;let chance=Math.max(.25,.9-lv*.065);if(Math.random()<chance){s.enhance[n]=lv+1;log(`✨ ${n} 強化成功，+${lv+1}！`)}else{log(`⚠️ ${n} 強化失敗，裝備保留。`)}update();save()}
+function buyPotion(){if(s.gold<50)return alert("金幣不足");s.gold-=50;s.potions++;update();save()}
+function buyGear(n){let g=gearDefs.find(x=>x[0]===n),cost=g[2]*100;if(s.gold<cost)return alert("金幣不足");s.gold-=cost;s.inventory.push(n);update();save()}
+function fightBoss(i){let b=bosses[i],a=stats();let dps=a.atk*1.25, hits=Math.ceil(b.hp/dps),incoming=Math.max(0,b.atk-a.def*.4)*hits*.18;if(s.hp<incoming+1)return alert("血量不足，請先補充藥水或提升防禦。");s.hp=Math.max(1,s.hp-incoming);s.gold+=b.gold;gainXP(b.xp);s.bossDone.push(i);s.inventory.push(b.drop);log(`🏆 擊敗 ${b.name}！取得 ${b.xp} EXP、${b.gold} 金幣與 ${b.drop}。`);update();save()}
+$("createBtn").onclick=()=>{if(s&&!confirm("重新建立角色會覆蓋目前本機存檔，確定嗎？"))return;let name=prompt("請輸入角色名稱","冒險者");if(name===null)return;let job=prompt("選擇職業：1 騎士、2 妖精、3 法師","1");s=fresh();s.name=name.trim()||"冒險者";s.job=job==="2"?"Elf":job==="3"?"Mage":"Knight";setMonster();offlineReward();update();save();log(`建立${classes[s.job].name}：${s.name}。`)}
+$("huntBtn").onclick=()=>{if(!s)return alert("請先建立角色");s.hunting=!s.hunting;if(s.hunting&&!monster)setMonster();update();save();log(s.hunting?"開始自動狩獵。":"暫停狩獵。")}
+$("potionBtn").onclick=()=>{if(!s)return;s.potion=!s.potion;update();save()}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("show",x.id===b.dataset.tab))});
+async function connectCloud(){let url=$("sbUrl").value.trim(),key=$("sbKey").value.trim();if(!url||!key)return alert("請填入 Supabase URL 與 anon key");localStorage.setItem("sb_url",url);localStorage.setItem("sb_key",key);try{let r=await fetch(url+"/auth/v1/signup",{method:"POST",headers:{"apikey":key,"Content-Type":"application/json"},body:JSON.stringify({})});let d=await r.json();if(!r.ok&&r.status!==422)throw Error(d.msg||d.message||r.status);let session=d.access_token?d:null;if(!session){let q=await fetch(url+"/auth/v1/token?grant_type=anonymous",{method:"POST",headers:{"apikey":key,"Content-Type":"application/json"},body:"{}"});session=await q.json();if(!q.ok)throw Error(session.msg||"匿名登入失敗")}cloud={url,key,token:session.access_token,user:session.user.id};$("cloudMsg").textContent="雲端已連線，使用匿名帳號。";$("saveState").textContent="雲端同步";await cloudSave()}catch(e){$("cloudMsg").textContent="連線失敗："+e.message;alert("雲端連線失敗："+e.message)}}
+async function cloudSave(){if(!cloud)return alert("請先連接雲端");try{let r=await fetch(cloud.url+"/rest/v1/game_saves?on_conflict=user_id",{method:"POST",headers:{"apikey":cloud.key,"Authorization":"Bearer "+cloud.token,"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({user_id:cloud.user,save_data:s,updated_at:new Date().toISOString()})});if(!r.ok)throw Error(await r.text());$("cloudMsg").textContent="雲端同步成功："+new Date().toLocaleTimeString();$("saveState").textContent="雲端已同步"}catch(e){$("cloudMsg").textContent="同步失敗："+e.message}}
+$("cloudConnect").onclick=connectCloud;$("cloudSave").onclick=cloudSave;
+(function init(){let u=localStorage.getItem("sb_url"),k=localStorage.getItem("sb_key");if(u)$("sbUrl").value=u;if(k)$("sbKey").value=k;if(s){offlineReward();if(s.hunting)log("自動狩獵已恢復。");setMonster();update()}else{$("createBtn").textContent="建立第一位角色";}timer=setInterval(()=>{if(s){if(s.hunting)attack();else if(s.hp<stats().hp)s.hp=Math.min(stats().hp,s.hp+1);save();update()}},1800);window.addEventListener("beforeunload",save)})();
+</script>
+</body></html>
